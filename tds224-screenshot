@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+DEV=/dev/ttyUSB0
+if [ ! -z "$1" ]; then
+    DEV="$1"
+fi
+
+# 19,200 baud
+# "raw"
+# cs8: 8 bits/byte
+# clocal: disable modem control signals
+# -cstopb: 1 stop bit
+# parenb: parity enable
+# parodd: set odd parity
+# crtscts: enable RTS/CTS handshaking
+# -ixon: disable XON/XOFF flow control
+# brkint: break character causes an interrupt signal
+stty -F "${DEV}" sane
+stty -F "${DEV}" 19200 raw cs8 clocal -cstopb parenb parodd crtscts -ixon brkint
+
+
+#
+# My scope does not appear to use RTS/CTS or XON/XOFF flow control, or
+# any other kind of signal that I can find to indicate that a "hardcopy"
+# image is coming, or that it's complete.  Luckily it always sends the
+# same number of bytes for each hardcopy, so we can use that to find
+# end-of-file.
+#
+
+FILENAME="scope.$(date +%Y-%m-%d.%H-%M-%S).png"
+NUM_BYTES=38462
+time dd if="${DEV}" bs=1 count=${NUM_BYTES} status=progress | bmptopnm -verbose | pnmtopng > "${FILENAME}"
+
+if [[ -v DISPLAY ]]; then
+    xdg-open "${FILENAME}"
+fi
