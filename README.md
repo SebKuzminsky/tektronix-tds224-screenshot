@@ -15,8 +15,9 @@ Configure the oscilloscope:
 Connect the scope's RS-232 port to a computer (I use a USB-to-RS232
 adapter).
 
-Set the DEV variable.
+Find its serial port device filename.
 
-Run this program, then hit the "HARDCOPY" button on the scope.
+Run this program with the serial port as the only argument, then hit the
+"HARDCOPY" button on the scope.
 
 It takes about 2-3 minutes to save a screenshot.
