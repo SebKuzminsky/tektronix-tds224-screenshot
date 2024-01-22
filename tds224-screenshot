@@ -31,6 +31,7 @@ stty -F "${DEV}" 19200 raw cs8 clocal -cstopb parenb parodd crtscts -ixon brkint
 
 FILENAME="scope.$(date +%Y-%m-%d.%H-%M-%S).png"
 NUM_BYTES=38462
+echo 'ready, press "HARDCOPY" on scope'
 time dd if="${DEV}" bs=1 count=${NUM_BYTES} status=progress | bmptopnm -verbose | pnmtopng > "${FILENAME}"
 
 if [[ -v DISPLAY ]]; then
