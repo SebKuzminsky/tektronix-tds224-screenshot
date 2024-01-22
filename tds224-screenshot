@@ -6,6 +6,7 @@ DEV=/dev/ttyUSB0
 if [ ! -z "$1" ]; then
     DEV="$1"
 fi
+echo "using serial port '${DEV}'"
 
 # 19,200 baud
 # "raw"
@@ -31,7 +32,7 @@ stty -F "${DEV}" 19200 raw cs8 clocal -cstopb parenb parodd crtscts -ixon brkint
 
 FILENAME="scope.$(date +%Y-%m-%d.%H-%M-%S).png"
 NUM_BYTES=38462
-echo 'ready, press "HARDCOPY" on scope'
+echo "ready, press 'HARDCOPY' on scope"
 time dd if="${DEV}" bs=1 count=${NUM_BYTES} status=progress | bmptopnm -verbose | pnmtopng > "${FILENAME}"
 
 if [[ -v DISPLAY ]]; then
